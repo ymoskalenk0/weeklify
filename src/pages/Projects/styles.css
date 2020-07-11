@@ -1,0 +1,12 @@
+.project-item-skeleton-title-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.project-item-skeleton-color {
+  display: block;
+  margin-right: 10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+}
