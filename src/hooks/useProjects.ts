@@ -2,7 +2,9 @@ import { useQuery } from 'react-query'
 
 import http from '../utils/http'
 
-const getProjects = async () => {
+import { Project } from '../types/Project'
+
+const getProjects = async (): Promise<Project[]> => {
   const { data } = await http.get(
     '/workspaces/5eba7650b068fd4ae875af40/projects'
   )

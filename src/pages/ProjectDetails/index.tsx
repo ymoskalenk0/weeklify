@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { RouteComponentProps } from 'react-router'
+import { useMutation, queryCache } from 'react-query'
 import {
   IonPage,
   IonHeader,
@@ -14,23 +15,40 @@ import {
   IonList,
   IonListHeader,
   IonLabel,
-  IonModal,
 } from '@ionic/react'
 import { ellipsisHorizontal } from 'ionicons/icons'
 
 import TaskList from '../../components/TaskList'
 import TaskListSkeleton from '../../components/TaskListSkeleton'
+import ModalTaskFilter from '../../components/ModalTaskFilter'
 
 import useProjectDetails from '../../hooks/useProjectDetails'
+import useTags from '../../hooks/useTags'
+import useTasks from '../../hooks/useTasks'
+
+import { TaskFilter, TaskStatus } from '../../types/TaskFilter'
+import { Task } from '../../types/Task'
+import { Tag } from '../../types/Tag'
 
 interface ProjectDetailsProps extends RouteComponentProps<{ pid: string }> {}
 
 const ProjectDetails: React.FC<ProjectDetailsProps> = ({ match }) => {
-  const { status, data: details, error, isFetching } = useProjectDetails(
-    match.params.pid
-  )
+  const { pid } = match.params
+
   const [showActionSheet, setShowActionSheet] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [isActive, setIsActive] = useState(true)
+
+  const { data: projectDetails } = useProjectDetails(pid)
+  // TODO: filter tasks by tags
+  const { isFetching: isTasksFetching, data: tasks } = useTasks(pid, isActive)
+  const { isFetching: isTagsFetching, data: tags } = useTags()
+
+  const onSetFilter = (filter: TaskFilter) => {
+    const isActive = filter.show === TaskStatus.Active
+    setShowModal(false)
+    setIsActive(isActive)
+  }
 
   return (
     <IonPage>
@@ -44,7 +62,7 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ match }) => {
               <IonIcon slot="icon-only" ios={ellipsisHorizontal} />
             </IonButton>
           </IonButtons>
-          <IonTitle>{details?.project.name}</IonTitle>
+          <IonTitle>{projectDetails?.name}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -52,27 +70,20 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ match }) => {
           <IonListHeader>
             <IonLabel>Tasks</IonLabel>
           </IonListHeader>
-          {isFetching ? (
+          {isTasksFetching ? (
             <TaskListSkeleton />
           ) : (
-            <TaskList items={details?.tasks} />
+            <TaskList items={tasks as Task[]} />
           )}
         </IonList>
-        <IonModal isOpen={showModal} cssClass="my-custom-class">
-          <IonHeader>
-            <IonToolbar>
-              <IonButtons slot="start">
-                <IonButton onClick={() => setShowModal(false)}>
-                  Cancel
-                </IonButton>
-              </IonButtons>
-              <IonButtons slot="end">
-                <IonButton onClick={() => {}}>Done</IonButton>
-              </IonButtons>
-              <IonTitle>Filter</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-        </IonModal>
+        {!isTagsFetching && (
+          <ModalTaskFilter
+            showModal={showModal}
+            setShowModal={setShowModal}
+            setFilter={onSetFilter}
+            availableTags={tags as Tag[]}
+          />
+        )}
         <IonActionSheet
           isOpen={showActionSheet}
           onDidDismiss={() => setShowActionSheet(false)}
@@ -89,15 +100,9 @@ const ProjectDetails: React.FC<ProjectDetailsProps> = ({ match }) => {
                 console.log('Copy clicked')
               },
             },
-            {
-              text: 'Generate',
-              handler: () => {
-                console.log('Generate clicked')
-              },
-            },
             { text: 'Cancel', role: 'cancel' },
           ]}
-        ></IonActionSheet>
+        />
       </IonContent>
     </IonPage>
   )

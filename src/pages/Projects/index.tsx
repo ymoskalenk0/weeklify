@@ -37,12 +37,14 @@ const Projects: React.FC = () => {
           <ProjectListSkeleton />
         ) : (
           <ProjectList
-            items={projects.map(({ id, name, color }: Project) => ({
-              id,
-              name,
-              color,
-              href: `/projects/${id}`,
-            }))}
+            items={(projects as Project[]).map(
+              ({ id, name, color }: Project) => ({
+                id,
+                name,
+                color,
+                href: `/projects/${id}`,
+              })
+            )}
           />
         )}
       </IonContent>
