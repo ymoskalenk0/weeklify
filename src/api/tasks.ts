@@ -11,5 +11,25 @@ export const getTasks = async (
     `/workspaces/5eba7650b068fd4ae875af40/projects/${pid}/tasks?is-active=${isActive}`
   )
 
-  return data
+  // TODO: create response types
+  const tasks = data.map((task: any) => {
+    let duration = '0m'
+
+    const timeMatch = task.duration
+      .toLowerCase()
+      .match(/^(?:PT)([0-9]{1,2}H)?([0-9]{1,2}M)/i)
+
+    if (timeMatch) {
+      const [, h, m] = timeMatch
+      duration = `${h || ''} ${m || ''}`
+    }
+
+    return {
+      id: task.id,
+      name: task.name,
+      duration,
+    }
+  })
+
+  return tasks
 }

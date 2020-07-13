@@ -15,18 +15,7 @@ interface TaskItemProps {
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({ item }) => {
-  const { name } = item
-
-  const timeMatch = item.duration
-    .toLowerCase()
-    .match(/^(?:PT)([0-9]{1,2}H)?([0-9]{1,2}M)/i)
-
-  let duration = '0m'
-
-  if (timeMatch) {
-    const [, h, m] = timeMatch
-    duration = `${h || ''} ${m || ''}`
-  }
+  const { name, duration } = item
 
   return (
     <IonItemSliding>
