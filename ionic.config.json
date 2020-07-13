@@ -1,0 +1,7 @@
+{
+  "name": "weeklify",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
