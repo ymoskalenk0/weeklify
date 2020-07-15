@@ -35,6 +35,7 @@ import Projects from './pages/Projects'
 import ProjectDetails from './pages/ProjectDetails'
 import Summary from './pages/Summary'
 import Settings from './pages/Settings'
+import Integrations from './pages/Integrations'
 
 const App: React.FC = () => (
   <IonApp>
@@ -49,6 +50,11 @@ const App: React.FC = () => (
           />
           <Route path="/summary" component={Summary} exact={true} />
           <Route path="/settings" component={Settings} exact={true} />
+          <Route
+            path="/settings/integrations"
+            component={Integrations}
+            exact={true}
+          />
           <Route
             path="/"
             render={() => <Redirect to="/projects" />}
