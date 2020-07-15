@@ -1,6 +1,6 @@
 {
   "name": "weeklify",
-  "version": "0.1.0-alpha.0",
+  "version": "0.2.0-alpha",
   "private": true,
   "dependencies": {
     "@capacitor/core": "2.2.1",
