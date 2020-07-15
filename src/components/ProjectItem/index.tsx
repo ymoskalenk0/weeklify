@@ -18,7 +18,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({ item }) => {
   const { name, color, href } = item
 
   return (
-    <IonCard href={href}>
+    <IonCard routerLink={href}>
       <IonCardHeader>
         <IonCardSubtitle>No Client</IonCardSubtitle>
         <div className="project-item-title-wrapper">

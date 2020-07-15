@@ -1,4 +1,4 @@
-import React, { FormEvent, useState, useEffect, useRef } from 'react'
+import React, { FormEvent, useState, useRef, useContext } from 'react'
 import {
   IonPage,
   IonHeader,
@@ -16,28 +16,17 @@ import {
   IonListHeader,
 } from '@ionic/react'
 
-import { ApiKeys } from '../../types/ApiKeys'
+import ApiKeysContext from '../../contexts/ApiKeys'
 
 const Integrations = () => {
   const clockifyRef = useRef<HTMLIonInputElement>(null)
-  const [apiKeys, setApiKeys] = useState<ApiKeys>({})
-  const [isInitialRender, setIsInitialRender] = useState(true)
   const [showToast, setShowToast] = useState(false)
-
-  useEffect(() => {
-    const apiKeysStr = localStorage.getItem('apiKeys')
-    apiKeysStr && setApiKeys(JSON.parse(apiKeysStr))
-    setIsInitialRender(false)
-  }, [])
-
-  useEffect(() => {
-    !isInitialRender && localStorage.setItem('apiKeys', JSON.stringify(apiKeys))
-  }, [apiKeys, isInitialRender])
+  const { apiKeys, setApiKeys } = useContext(ApiKeysContext)
 
   const saveChanges = (event: FormEvent) => {
     event.preventDefault()
     const clockify = clockifyRef.current!.value as string
-    setApiKeys({ ...apiKeys, clockify })
+    setApiKeys!({ ...apiKeys, clockify })
     setShowToast(true)
   }
 
@@ -64,7 +53,7 @@ const Integrations = () => {
             </IonListHeader>
             <IonItem>
               <IonLabel position="floating">Clockify API key</IonLabel>
-              <IonInput ref={clockifyRef} value={apiKeys.clockify} />
+              <IonInput ref={clockifyRef} value={apiKeys!.clockify} />
             </IonItem>
           </IonList>
           <div className="ion-padding">

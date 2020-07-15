@@ -1,4 +1,5 @@
 import React from 'react'
+import { RouteComponentProps } from 'react-router'
 import {
   IonPage,
   IonHeader,
@@ -12,7 +13,7 @@ import {
   IonText,
 } from '@ionic/react'
 
-const Settings = () => {
+const Settings: React.FC<RouteComponentProps> = ({ history }) => {
   return (
     <IonPage>
       <IonHeader>
@@ -29,17 +30,17 @@ const Settings = () => {
         {/* TODO: uncomment for the future release */}
         {/* <IonCard>
           <IonList>
-            <IonItem href="/settings/appeareance">
+            <IonItem routerLink="/settings/appeareance">
               <IonLabel>Appeareance</IonLabel>
             </IonItem>
-            <IonItem href="/settings/notifications" lines="none">
+            <IonItem routerLink="/settings/notifications" lines="none">
               <IonLabel>Push Notifications</IonLabel>
             </IonItem>
           </IonList>
         </IonCard> */}
         <IonCard>
           <IonList>
-            <IonItem href="/settings/integrations" lines="none">
+            <IonItem routerLink="/settings/integrations" lines="none">
               <IonLabel>Integrations</IonLabel>
             </IonItem>
           </IonList>
