@@ -35,43 +35,71 @@ import Projects from './pages/Projects'
 import ProjectDetails from './pages/ProjectDetails'
 import Summary from './pages/Summary'
 import Settings from './pages/Settings'
+import Integrations from './pages/Integrations'
+import Signup from './pages/Signup'
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route path="/projects" component={Projects} exact={true} />
-          <Route
-            path="/projects/:pid"
-            component={ProjectDetails}
-            exact={true}
-          />
-          <Route path="/summary" component={Summary} exact={true} />
-          <Route path="/settings" component={Settings} exact={true} />
-          <Route
-            path="/"
-            render={() => <Redirect to="/projects" />}
-            exact={true}
-          />
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-          <IonTabButton tab="projects" href="/projects">
-            <IonIcon icon={listOutline} />
-            <IonLabel>Projects</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="summary" href="/summary">
-            <IonIcon icon={statsChartOutline} />
-            <IonLabel>Summary</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="settings" href="/settings">
-            <IonIcon icon={settingsOutline} />
-            <IonLabel>Settings</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-    </IonReactRouter>
-  </IonApp>
-)
+import useApiKeys from './hooks/useApiKeys'
+
+import ApiKeysContext from './contexts/ApiKeys'
+
+const App: React.FC = () => {
+  const { isUserValid, apiKeys, setApiKeys } = useApiKeys()
+
+  return (
+    <ApiKeysContext.Provider value={{ isUserValid, apiKeys, setApiKeys }}>
+      <IonApp>
+        <IonReactRouter>
+          <IonTabs>
+            <IonRouterOutlet>
+              <Route path="/signup" component={Signup} exact={true} />
+              <Route path="/projects" component={Projects} exact={true} />
+              <Route
+                path="/projects/:pid"
+                component={ProjectDetails}
+                exact={true}
+              />
+              <Route path="/summary" component={Summary} exact={true} />
+              <Route path="/settings" component={Settings} exact={true} />
+              <Route
+                path="/settings/integrations"
+                component={Integrations}
+                exact={true}
+              />
+              <Route
+                path="/"
+                render={() => <Redirect to="/projects" />}
+                exact={true}
+              />
+              <Route
+                path="*"
+                render={() =>
+                  isUserValid ? (
+                    <Redirect to="/projects" />
+                  ) : (
+                    <Redirect to="/signup" />
+                  )
+                }
+              />
+            </IonRouterOutlet>
+            <IonTabBar slot="bottom" hidden={!isUserValid}>
+              <IonTabButton tab="projects" href="/projects">
+                <IonIcon icon={listOutline} />
+                <IonLabel>Projects</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="summary" href="/summary">
+                <IonIcon icon={statsChartOutline} />
+                <IonLabel>Summary</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="settings" href="/settings">
+                <IonIcon icon={settingsOutline} />
+                <IonLabel>Settings</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+        </IonReactRouter>
+      </IonApp>
+    </ApiKeysContext.Provider>
+  )
+}
 
 export default App

@@ -16,6 +16,8 @@ import useProjects from '../../hooks/useProjects'
 
 import { Project } from '../../types/Project'
 
+// import WithScreenMessage from '../../components/WithScreenMessage'
+
 const Projects: React.FC = () => {
   // TODO: pass active workspace id
   const { status, data: projects, error, isFetching } = useProjects()

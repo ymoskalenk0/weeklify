@@ -1,6 +1,6 @@
 {
   "name": "weeklify",
-  "version": "0.1.0-alpha.0",
+  "version": "0.2.0-alpha",
   "private": true,
   "dependencies": {
     "@capacitor/core": "2.2.1",
@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "REACT_APP_VERSION=$(node -pe 'require(\"./package.json\").version') react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prettify": "prettier --write ."
