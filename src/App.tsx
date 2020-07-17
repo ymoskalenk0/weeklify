@@ -8,6 +8,7 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
+  IonLoading,
 } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 import { listOutline, statsChartOutline, settingsOutline } from 'ionicons/icons'
@@ -38,67 +39,81 @@ import Settings from './pages/Settings'
 import Integrations from './pages/Integrations'
 import Signup from './pages/Signup'
 
-import useApiKeys from './hooks/useApiKeys'
+import useUserAuth from './hooks/useUserAuth'
 
-import ApiKeysContext from './contexts/ApiKeys'
+import UserAuthContext from './contexts/UserAuth'
 
 const App: React.FC = () => {
-  const { isUserValid, apiKeys, setApiKeys } = useApiKeys()
+  const {
+    isUserLoading,
+    isUserValid,
+    defaultWorkspace,
+    apiKeys,
+    setApiKeys,
+  } = useUserAuth()
 
   return (
-    <ApiKeysContext.Provider value={{ isUserValid, apiKeys, setApiKeys }}>
+    <UserAuthContext.Provider
+      value={{
+        isUserLoading,
+        isUserValid,
+        defaultWorkspace,
+        apiKeys,
+        setApiKeys,
+      }}
+    >
       <IonApp>
-        <IonReactRouter>
-          <IonTabs>
-            <IonRouterOutlet>
-              <Route path="/signup" component={Signup} exact={true} />
-              <Route path="/projects" component={Projects} exact={true} />
-              <Route
-                path="/projects/:pid"
-                component={ProjectDetails}
-                exact={true}
-              />
-              <Route path="/summary" component={Summary} exact={true} />
-              <Route path="/settings" component={Settings} exact={true} />
-              <Route
-                path="/settings/integrations"
-                component={Integrations}
-                exact={true}
-              />
-              <Route
-                path="/"
-                render={() => <Redirect to="/projects" />}
-                exact={true}
-              />
-              <Route
-                path="*"
-                render={() =>
-                  isUserValid ? (
-                    <Redirect to="/projects" />
-                  ) : (
-                    <Redirect to="/signup" />
-                  )
-                }
-              />
-            </IonRouterOutlet>
-            <IonTabBar slot="bottom" hidden={!isUserValid}>
-              <IonTabButton tab="projects" href="/projects">
-                <IonIcon icon={listOutline} />
-                <IonLabel>Projects</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="summary" href="/summary">
-                <IonIcon icon={statsChartOutline} />
-                <IonLabel>Summary</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="settings" href="/settings">
-                <IonIcon icon={settingsOutline} />
-                <IonLabel>Settings</IonLabel>
-              </IonTabButton>
-            </IonTabBar>
-          </IonTabs>
-        </IonReactRouter>
+        {isUserLoading ? (
+          <IonLoading isOpen={true} message={'Please wait...'} />
+        ) : (
+          <IonReactRouter>
+            <IonTabs>
+              <IonRouterOutlet>
+                <Route path="/signup" component={Signup} exact={true} />
+                <Route path="/projects" component={Projects} exact={true} />
+                <Route
+                  path="/projects/:pid"
+                  component={ProjectDetails}
+                  exact={true}
+                />
+                <Route path="/summary" component={Summary} exact={true} />
+                <Route path="/settings" component={Settings} exact={true} />
+                <Route
+                  path="/settings/integrations"
+                  component={Integrations}
+                  exact={true}
+                />
+                <Route
+                  path="/"
+                  render={() =>
+                    isUserValid ? (
+                      <Redirect to="/projects" />
+                    ) : (
+                      <Redirect to="/signup" />
+                    )
+                  }
+                  exact={true}
+                />
+              </IonRouterOutlet>
+              <IonTabBar slot="bottom" hidden={!isUserValid}>
+                <IonTabButton tab="projects" href="/projects">
+                  <IonIcon icon={listOutline} />
+                  <IonLabel>Projects</IonLabel>
+                </IonTabButton>
+                <IonTabButton tab="summary" href="/summary">
+                  <IonIcon icon={statsChartOutline} />
+                  <IonLabel>Summary</IonLabel>
+                </IonTabButton>
+                <IonTabButton tab="settings" href="/settings">
+                  <IonIcon icon={settingsOutline} />
+                  <IonLabel>Settings</IonLabel>
+                </IonTabButton>
+              </IonTabBar>
+            </IonTabs>
+          </IonReactRouter>
+        )}
       </IonApp>
-    </ApiKeysContext.Provider>
+    </UserAuthContext.Provider>
   )
 }
 

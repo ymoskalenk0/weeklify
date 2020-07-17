@@ -20,13 +20,13 @@ import {
 
 import './styles.css'
 
-import ApiKeysContext from '../../contexts/ApiKeys'
+import UserAuthContext from '../../contexts/UserAuth'
 
 const Signup: React.FC<RouteComponentProps> = ({ history }) => {
   const clockifyRef = useRef<HTMLIonInputElement>(null)
   const loadingRef = useRef<HTMLIonLoadingElement>(null)
 
-  const { isUserValid, apiKeys, setApiKeys } = useContext(ApiKeysContext)
+  const { isUserValid, apiKeys, setApiKeys } = useContext(UserAuthContext)
 
   const [clockifyApiKey, setClockifyApiKey] = useState('')
   const [showLoading, setShowLoading] = useState(false)
@@ -41,7 +41,7 @@ const Signup: React.FC<RouteComponentProps> = ({ history }) => {
 
   useEffect(() => {
     if (isUserValid) {
-      history.push('/projects')
+      history.replace('/projects')
       setShowLoading(false)
     } else {
       setIsLoadingPresent(false)

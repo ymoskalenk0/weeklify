@@ -16,12 +16,12 @@ import {
   IonListHeader,
 } from '@ionic/react'
 
-import ApiKeysContext from '../../contexts/ApiKeys'
+import UserAuthContext from '../../contexts/UserAuth'
 
 const Integrations = () => {
   const clockifyRef = useRef<HTMLIonInputElement>(null)
   const [showToast, setShowToast] = useState(false)
-  const { apiKeys, setApiKeys } = useContext(ApiKeysContext)
+  const { apiKeys, setApiKeys } = useContext(UserAuthContext)
 
   const saveChanges = (event: FormEvent) => {
     event.preventDefault()
