@@ -2,6 +2,7 @@ import { useQuery } from 'react-query'
 
 import http from '../utils/http'
 import dayjs from '../utils/dayjs'
+import { getDefaultWorkspace } from '../utils/storage'
 
 import { Summary } from '../types/Summary'
 import { SummaryFilter, AvailableDate } from '../types/SummaryFilter'
@@ -21,6 +22,7 @@ const formatToHours = (duration: number) => {
 
 const getSummary = async (
   key: string,
+  workspace: string,
   filter: SummaryFilter
 ): Promise<Summary> => {
   let dateRangeStart: string
@@ -50,7 +52,7 @@ const getSummary = async (
   const {
     data: { totals, groupOne },
   } = await http.post(
-    '/workspaces/5eba7650b068fd4ae875af40/reports/summary',
+    `/workspaces/${workspace}/reports/summary`,
     {
       dateRangeStart,
       dateRangeEnd,
@@ -86,5 +88,6 @@ const getSummary = async (
 }
 
 export default function useSummary(filter: SummaryFilter) {
-  return useQuery(['summary', filter], getSummary)
+  const workspace = getDefaultWorkspace()
+  return useQuery(['summary', workspace, filter], getSummary)
 }
