@@ -6,7 +6,7 @@
     "@capacitor/core": "2.2.1",
     "@ionic/react": "^5.0.7",
     "@ionic/react-router": "^5.0.7",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "copy-to-clipboard": "^3.3.1",
     "dayjs": "^1.8.29",
     "ionicons": "^5.0.0",
